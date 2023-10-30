@@ -6,16 +6,14 @@ from PyQt5.QtCore import QThread, pyqtSignal
 class ConsoleThread(QThread):
     updated = pyqtSignal(str)
 
-    def __init__(self, **common_args):
+    def __init__(self, command):
         super(ConsoleThread, self).__init__()
-        self.__common_args = common_args
+        self.__command = command
 
     def run(self):
         try:
-            command = 'python script.py'
-
             process = subprocess.Popen(
-                command,
+                self.__command,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 errors='replace'
@@ -24,7 +22,6 @@ class ConsoleThread(QThread):
             while True:
                 realtime_output = process.stdout.readline()
                 if realtime_output == '' and process.poll() is not None:
-                    print('Thread end for a variant of reasons')
                     break
                 if realtime_output:
                     self.updated.emit(realtime_output)

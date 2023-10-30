@@ -12,7 +12,7 @@ sys.path.insert(0, project_root)
 sys.path.insert(0, os.getcwd())  # Add the current directory as well
 
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QMainWindow, QPushButton, QApplication, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QMainWindow, QPushButton, QApplication, QVBoxLayout, QWidget, QLineEdit
 from PyQt5.QtCore import Qt, QCoreApplication
 
 from pyqt_console import ConsoleWidget
@@ -30,12 +30,20 @@ class MainWindow(QMainWindow):
 
     def __initUi(self):
         self.setWindowTitle('PyQt console example')
+
+        self.__commandLineEdit = QLineEdit()
+        self.__commandLineEdit.setPlaceholderText('Type something...')
+        self.__commandLineEdit.setText('python script.py')
+        self.__commandLineEdit.returnPressed.connect(self.__run)
+
         btn = QPushButton()
         btn.setText('Run!')
         btn.clicked.connect(self.__run)
+
         self.__consoleWidget = ConsoleWidget()
 
         lay = QVBoxLayout()
+        lay.addWidget(self.__commandLineEdit)
         lay.addWidget(btn)
         lay.addWidget(self.__consoleWidget)
         mainWidget = QWidget()
@@ -43,7 +51,8 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(mainWidget)
 
     def __run(self):
-        self.__t = ConsoleThread()
+        command = self.__commandLineEdit.text()
+        self.__t = ConsoleThread(command)
         self.__t.started.connect(self.__started)
         self.__t.updated.connect(self.__consoleWidget.append)
         self.__t.finished.connect(self.__finished)
