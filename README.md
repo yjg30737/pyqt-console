@@ -5,6 +5,8 @@ The console widget (with the class name 'ConsoleWidget') inherits from QTextBrow
 
 This will be used a lot for PyQt-AI related applications, so i want to share this with you :)
 
+You have to check each `ConsoleThread` class in pyqt_console_thread.py and `ConsoleWidget` class in pyqt_console.py to know how this works, if you want to use it :)
+
 ## Reqirements
 * PyQt5 >= 5.14
 * ansi2html
